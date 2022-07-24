@@ -18,7 +18,9 @@ module.exports = etag
  * @private
  */
 
-var crypto = require('crypto')
+const { Crypto } = require('@peculiar/webcrypto')
+
+const crypto = new Crypto()
 var Stats = require('fs').Stats
 
 /**
@@ -36,7 +38,7 @@ var toString = Object.prototype.toString
  * @private
  */
 
-function entitytag (entity) {
+function entitytag(entity) {
   if (entity.length === 0) {
     // fast-path empty
     return '"0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"'
@@ -50,9 +52,10 @@ function entitytag (entity) {
     .substring(0, 27)
 
   // compute length of entity
-  var len = typeof entity === 'string'
-    ? Buffer.byteLength(entity, 'utf8')
-    : entity.length
+  var len =
+    typeof entity === 'string'
+      ? Buffer.byteLength(entity, 'utf8')
+      : entity.length
 
   return '"' + len.toString(16) + '-' + hash + '"'
 }
@@ -67,16 +70,15 @@ function entitytag (entity) {
  * @public
  */
 
-function etag (entity, options) {
+function etag(entity, options) {
   if (entity == null) {
     throw new TypeError('argument entity is required')
   }
 
   // support fs.Stats object
   var isStats = isstats(entity)
-  var weak = options && typeof options.weak === 'boolean'
-    ? options.weak
-    : isStats
+  var weak =
+    options && typeof options.weak === 'boolean' ? options.weak : isStats
 
   // validate argument
   if (!isStats && typeof entity !== 'string' && !Buffer.isBuffer(entity)) {
@@ -84,13 +86,9 @@ function etag (entity, options) {
   }
 
   // generate entity tag
-  var tag = isStats
-    ? stattag(entity)
-    : entitytag(entity)
+  var tag = isStats ? stattag(entity) : entitytag(entity)
 
-  return weak
-    ? 'W/' + tag
-    : tag
+  return weak ? 'W/' + tag : tag
 }
 
 /**
@@ -101,18 +99,25 @@ function etag (entity, options) {
  * @api private
  */
 
-function isstats (obj) {
+function isstats(obj) {
   // genuine fs.Stats
   if (typeof Stats === 'function' && obj instanceof Stats) {
     return true
   }
 
   // quack quack
-  return obj && typeof obj === 'object' &&
-    'ctime' in obj && toString.call(obj.ctime) === '[object Date]' &&
-    'mtime' in obj && toString.call(obj.mtime) === '[object Date]' &&
-    'ino' in obj && typeof obj.ino === 'number' &&
-    'size' in obj && typeof obj.size === 'number'
+  return (
+    obj &&
+    typeof obj === 'object' &&
+    'ctime' in obj &&
+    toString.call(obj.ctime) === '[object Date]' &&
+    'mtime' in obj &&
+    toString.call(obj.mtime) === '[object Date]' &&
+    'ino' in obj &&
+    typeof obj.ino === 'number' &&
+    'size' in obj &&
+    typeof obj.size === 'number'
+  )
 }
 
 /**
@@ -123,7 +128,7 @@ function isstats (obj) {
  * @private
  */
 
-function stattag (stat) {
+function stattag(stat) {
   var mtime = stat.mtime.getTime().toString(16)
   var size = stat.size.toString(16)
 
