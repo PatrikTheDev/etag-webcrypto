@@ -1,7 +1,7 @@
 {
   "name": "etag-webcrypto",
   "description": "Limited edge-ready fork of etag",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "contributors": [
     "Patrik Svoboda <svob.pata@gmail.com>",
     "Douglas Christopher Wilson <doug@somethingdoug.com>",
