@@ -1,8 +1,9 @@
 {
-  "name": "etag",
-  "description": "Create simple HTTP ETags",
-  "version": "1.8.1",
+  "name": "etag-webcrypto",
+  "description": "Limited edge-ready fork of etag",
+  "version": "0.0.1",
   "contributors": [
+    "Patrik Svoboda <svob.pata@gmail.com>",
     "Douglas Christopher Wilson <doug@somethingdoug.com>",
     "David Björklund <david.bjorklund@gmail.com>"
   ],
@@ -10,9 +11,10 @@
   "keywords": [
     "etag",
     "http",
-    "res"
+    "res",
+    "edge"
   ],
-  "repository": "jshttp/etag",
+  "repository": "PatrikTheDev/etag-webcore",
   "devDependencies": {
     "beautify-benchmark": "0.2.4",
     "benchmark": "2.1.4",
