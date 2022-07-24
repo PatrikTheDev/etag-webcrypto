@@ -4,21 +4,7 @@
  * MIT Licensed
  */
 
-'use strict'
-
-/**
- * Module exports.
- * @public
- */
-
-module.exports = etag
-
-/**
- * Module dependencies.
- * @private
- */
-
-const { Crypto } = require('@peculiar/webcrypto')
+import { Crypto } from '@peculiar/webcrypto'
 
 const crypto = new Crypto()
 
@@ -30,14 +16,14 @@ const crypto = new Crypto()
  * @private
  */
 
-function entitytag(entity) {
+function entitytag(entity: string | Buffer) {
   if (entity.length === 0) {
     // fast-path empty
     return '"0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"'
   }
 
   // compute hash of entity
-  const hash = crypto
+  const hash = crypto.subtle
     .createHash('sha1')
     .update(entity, 'utf8')
     .digest('base64')
@@ -52,6 +38,10 @@ function entitytag(entity) {
   return '"' + len.toString(16) + '-' + hash + '"'
 }
 
+export type ETagOptions = {
+  weak?: boolean
+}
+
 /**
  * Create a simple ETag.
  *
@@ -62,11 +52,11 @@ function entitytag(entity) {
  * @public
  */
 
-function etag(entity, options) {
+export default function etag(entity: string | Buffer, options?: ETagOptions) {
   if (!entity) {
     throw new TypeError('argument entity is required')
   }
-  const weak = options && typeof options.weak === 'boolean' && options.weak
+  const weak = !!options?.weak
 
   // validate argument
   if (typeof entity !== 'string' && !Buffer.isBuffer(entity)) {
